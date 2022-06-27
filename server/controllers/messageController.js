@@ -1,4 +1,8 @@
+require("dotenv").config();
 const Messages = require("../models/messageModel");
+const aes256 = require('aes256');
+
+const cipher = aes256.createCipher(process.env.CIPHER);
 
 module.exports.getMessages = async (req, res, next) => {
   try {
@@ -13,7 +17,8 @@ module.exports.getMessages = async (req, res, next) => {
     const projectedMessages = messages.map((msg) => {
       return {
         fromSelf: msg.sender.toString() === from,
-        message: msg.message.text,
+        message: cipher.decrypt(msg.message.text),
+        time: msg.createdAt
       };
     });
     res.json(projectedMessages);
@@ -23,10 +28,12 @@ module.exports.getMessages = async (req, res, next) => {
 };
 
 module.exports.addMessage = async (req, res, next) => {
+  //console.log(new Date().getTime());
   try {
     const { from, to, message } = req.body;
     const data = await Messages.create({
-      message: { text: message },
+      message: { text: cipher.encrypt(message) },
+      time: new Date(),
       users: [from, to],
       sender: from,
     });

@@ -10,13 +10,15 @@ export default function Welcome() {
       ).username
     );
   }, []);
+  /*
+<img src={Robot} alt="" />
+  */
   return (
     <Container>
-      <img src={Robot} alt="" />
       <h1>
-        Welcome, <span>{userName}!</span>
+        Benvenuto, <span>{userName}!</span>
       </h1>
-      <h3>Please select a chat to Start messaging.</h3>
+      <h3>Seleziona un contatto per iniziare una conversazione.</h3>
     </Container>
   );
 }

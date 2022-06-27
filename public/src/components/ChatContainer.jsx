@@ -5,6 +5,7 @@ import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
+import {BiTime} from "react-icons/bi";
 
 export default function ChatContainer({ currentChat, socket }) {
   const [messages, setMessages] = useState([]);
@@ -41,6 +42,7 @@ export default function ChatContainer({ currentChat, socket }) {
       to: currentChat._id,
       from: data._id,
       msg,
+      time: new Date().getTime(),
     });
     await axios.post(sendMessageRoute, {
       from: data._id,
@@ -49,14 +51,14 @@ export default function ChatContainer({ currentChat, socket }) {
     });
 
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
+    msgs.push({ fromSelf: true, message: msg, time: new Date().getTime()  });
     setMessages(msgs);
   };
 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
+        setArrivalMessage({ fromSelf: false, message: msg, time: new Date().getTime() });
       });
     }
   }, []);
@@ -87,6 +89,22 @@ export default function ChatContainer({ currentChat, socket }) {
       </div>
       <div className="chat-messages">
         {messages.map((message) => {
+          //console.log(message);
+
+          var today = new Date()
+          var days = 86400000 //number of milliseconds in a day
+          var yesterday = new Date(today - (1*days))
+
+          var time = new Date(message.time).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+          var dateSeparator = false;
+
+          if(yesterday >= new Date(message.time).getTime() ) {
+            dateSeparator = true;
+            time = new Date(message.time).toLocaleString('it-IT', {day: 'numeric', weekday: 'short', month: 'short', year:'numeric', hour: '2-digit', minute: '2-digit'});
+          }
+
+
           return (
             <div ref={scrollRef} key={uuidv4()}>
               <div
@@ -95,7 +113,9 @@ export default function ChatContainer({ currentChat, socket }) {
                 }`}
               >
                 <div className="content ">
-                  <p>{message.message}</p>
+                  <p>{message.message}
+                  <span className="time"><BiTime /> {time}</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -163,6 +183,17 @@ const Container = styled.div`
         @media screen and (min-width: 720px) and (max-width: 1080px) {
           max-width: 70%;
         }
+        .time {
+          display: block;
+          font-size: 10px;
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          svg {
+            margin-right: 3px;
+        }
+      }
       }
     }
     .sended {
@@ -175,6 +206,9 @@ const Container = styled.div`
       justify-content: flex-start;
       .content {
         background-color: #9900ff20;
+        .time {
+          justify-content: flex-start;
+      }
       }
     }
   }

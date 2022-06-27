@@ -84,14 +84,17 @@ export default function Register() {
     }
   };
 
+  /*
+<div className="brand">
+            <img src={Logo} alt="logo" />
+            <h1>snappy</h1>
+          </div>
+  */
+
   return (
     <>
       <FormContainer>
         <form action="" onSubmit={(event) => handleSubmit(event)}>
-          <div className="brand">
-            <img src={Logo} alt="logo" />
-            <h1>snappy</h1>
-          </div>
           <input
             type="text"
             placeholder="Username"
@@ -118,7 +121,7 @@ export default function Register() {
           />
           <button type="submit">Create User</button>
           <span>
-            Already have an account ? <Link to="/login">Login.</Link>
+            Hai già un accounnt ? <Link to="/login">Entra.</Link>
           </span>
         </form>
       </FormContainer>

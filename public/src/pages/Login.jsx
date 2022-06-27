@@ -61,14 +61,17 @@ export default function Login() {
     }
   };
 
+  /*
+<div className="brand">
+            <img src={Logo} alt="logo" />
+            <h1>snappy</h1>
+          </div>
+  */
+
   return (
     <>
       <FormContainer>
         <form action="" onSubmit={(event) => handleSubmit(event)}>
-          <div className="brand">
-            <img src={Logo} alt="logo" />
-            <h1>snappy</h1>
-          </div>
           <input
             type="text"
             placeholder="Username"
@@ -82,9 +85,9 @@ export default function Login() {
             name="password"
             onChange={(e) => handleChange(e)}
           />
-          <button type="submit">Log In</button>
+          <button type="submit">Entra</button>
           <span>
-            Don't have an account ? <Link to="/register">Create One.</Link>
+            Non hai un account? <Link to="/register">Creane uno.</Link>
           </span>
         </form>
       </FormContainer>
